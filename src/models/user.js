@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -40,6 +41,12 @@ const userSchema = new mongoose.Schema({
       }
     },
   },
+  tokens: [{
+    token: {
+      type: String,
+      required: true,
+    },
+  }],
 });
 
 // A middleware which populate before save() being executed
@@ -73,7 +80,13 @@ userSchema.statics.findByCredentials = async (email, password) => {
   return user;
 };
 
-const User = mongoose.model('User', userSchema);
+userSchema.methods.generateAuthToken = async function genToken() {
+  const user = this;
+  const token = jwt.sign({ _id: user._id }, 'helloworldimjaypan');
 
+  return token;
+};
+
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;
