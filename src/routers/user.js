@@ -16,6 +16,18 @@ router.post('/users', async (req, res) => {
   }
 });
 
+// Delete the auth token in user data
+router.post('/users/logout', auth, async (req, res) => {
+  try {
+    // filter out the token the user used
+    req.user.tokens = req.user.tokens.filter((tokenObj) => tokenObj.token !== req.token);
+    await req.user.save();
+    res.send(200);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
 router.post('/users/login', async (req, res) => {
   try {
     const user = await User.findByCredentials(req.body.email, req.body.password);
