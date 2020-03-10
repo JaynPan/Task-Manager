@@ -80,6 +80,17 @@ userSchema.statics.findByCredentials = async (email, password) => {
   return user;
 };
 
+userSchema.methods.getPublicProfile = async function () {
+  const user = this;
+  const userObject = user.toObject();
+
+  // delete sensitve data, password and tokens
+  delete userObject.password;
+  delete userObject.tokens;
+
+  return userObject;
+};
+
 userSchema.methods.generateAuthToken = async function genToken() {
   const user = this;
   const token = jwt.sign({ _id: user._id }, 'helloworldimjaypan');
