@@ -80,7 +80,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
   return user;
 };
 
-userSchema.methods.getPublicProfile = async function () {
+userSchema.methods.toJSON = function toJson() {
   const user = this;
   const userObject = user.toObject();
 
