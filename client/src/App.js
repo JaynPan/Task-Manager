@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import { getCookie } from './utils/cookies';
 import './App.css';
 
 function App() {
   const [input, setInput] = useState({ email: "", password: "" })
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [errorMsg, setErrorMsg] = useState("")
   const [profile, setProfile] = useState({})
   const handleInputChange = (e) => {
@@ -26,31 +27,61 @@ function App() {
         'Content-Type': 'application/json'
       },
     }).then(res => {
-      return res.json()
+      if(res.status === 200) {
+        return res.json()
+      } else {
+        throw new Error(`${res.status}, ${res.statusText}`)
+      }
     }).then(profile => {
-      setProfile(profile)
+      document.cookie = `access_token=${profile.token}; SameSite=Strict`
+      setIsAuthenticated(true)
+      setProfile(profile.user)
     }).catch(e => {
-      console.log(e)
+      console.warn(e)
     })
   }
+
+  useEffect(() => {
+    fetch('/users/me', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getCookie('access_token') || ''}`
+      }
+    }).then(res => {
+      if(res.status === 200) {
+        return res.json()
+      } else {
+        throw new Error(`${res.status}, ${res.statusText}`)
+      }
+    }).then((data) => {
+      setIsAuthenticated(true)
+      setProfile(data)
+    }).catch(e => console.error(e))
+  }, [])
 
   return (
     <div className="App">
       {errorMsg.length !== 0 && <b>{errorMsg}</b>}
-      <form onSubmit={login}>
-        <label>
-          Email
-          <input type="text" name="email" onChange={handleInputChange}></input>
-        </label>
-        <label>
-          Password
-          <input type="text" name="password" onChange={handleInputChange}></input>
-        </label>
-        <input type='submit'  value="login" />
-      </form>
-      <div>
-        {Object.keys(profile).length !== 0 && <p>{profile.user.name}</p>}
-      </div>
+      {!isAuthenticated ? (
+        <div>
+          <form onSubmit={login}>
+          <label>
+            Email
+            <input type="text" name="email" onChange={handleInputChange}></input>
+          </label>
+          <label>
+            Password
+            <input type="text" name="password" onChange={handleInputChange}></input>
+          </label>
+          <input type='submit'  value="login" />
+        </form>
+        </div>
+      ) : (
+        <div>
+          {Object.keys(profile).length !== 0 && <p>Hi, {profile.name}!</p>}
+        </div>
+      )}
     </div>
   );
 }
