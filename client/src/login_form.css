@@ -13,3 +13,7 @@
 .login-form-container .app-name {
   padding-bottom: 1em;
 }
+
+.login-form-container .error {
+  color: #ff4d4f;
+}

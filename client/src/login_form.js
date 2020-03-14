@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Form, Input, Button, Checkbox,
 } from 'antd';
@@ -7,24 +7,52 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './login_form.css';
 
 export default function LoginForm() {
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+  const [errMsg, setErrMsg] = useState('');
+
+  const onFinish = async (values) => {
+    try {
+      const res = await fetch('/users/login', {
+        method: 'POST',
+        body: JSON.stringify(values),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (res.status === 200) {
+        const data = await res.json();
+        console.log(data);
+      } else {
+        setErrMsg('Incoreect email or password!');
+      }
+    } catch (e) {
+      setErrMsg(`Something went wrong! ${e}`);
+    }
+  };
+
+  const onFieldsChange = () => {
+    if (errMsg.length !== 0) {
+      setErrMsg('');
+    }
   };
 
   return (
     <div className="login-form-container">
-      <h2 className="app-name">Task Manager App</h2>
+      <h2 className="app-name">Task Manager</h2>
+      {errMsg.length !== 0 && <p className="error">{errMsg}</p>}
+
       <Form
         name="normal_login"
         className="login-form"
         initialValues={{ remember: true }}
         onFinish={onFinish}
+        onFieldsChange={onFieldsChange}
       >
         <Form.Item
-          name="username"
-          rules={[{ required: true, message: 'Please input your Username!' }]}
+          name="email"
+          rules={[{ required: true, message: 'Please input your Email!' }]}
         >
-          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
         </Form.Item>
         <Form.Item
           name="password"
