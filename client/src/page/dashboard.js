@@ -7,7 +7,7 @@ export default function Dashboard() {
   const Auth = useContext(UseAuth);
   const handleLogout = () => {
     Auth.setAuth(false);
-    Cookies.remove('token');
+    Cookies.remove('access_token');
   };
 
   return (

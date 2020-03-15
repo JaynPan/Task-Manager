@@ -7,8 +7,8 @@ import UseAuth from './utils/use_auth';
 
 export default function App() {
   const [auth, setAuth] = useState(false);
-  const readCookie = async () => {
-    const token = Cookies.get('token');
+  const fetchUser = async () => {
+    const token = Cookies.get('access_token');
 
     if (token) {
       // fetch "/users/me" to check token is valid or not
@@ -26,7 +26,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    readCookie();
+    fetchUser();
   }, []);
 
   return (
