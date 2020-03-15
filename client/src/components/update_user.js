@@ -59,6 +59,7 @@ export default function UpdateUser() {
       <Form
         name="register-form"
         className="register-form"
+        initialValues={Auth.user}
         onFinish={onFinish}
         onFieldsChange={onFieldsChange}
       >
