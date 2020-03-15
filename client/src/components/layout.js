@@ -21,7 +21,7 @@ export default function DashboardLayout({ children }) {
           left: 0,
         }}
       >
-        <div className="logo" />
+        <div className="logo">Task Manager</div>
         <Menu theme="dark" mode="inline">
           <Menu.Item key="0">
             <HomeOutlined />
