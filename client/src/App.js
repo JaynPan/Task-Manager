@@ -6,6 +6,7 @@ import Routes from './routes/routes';
 import UseAuth from './utils/use_auth';
 
 export default function App() {
+  const [user, setUser] = useState({});
   const [auth, setAuth] = useState(false);
   const fetchUser = async () => {
     const token = Cookies.get('access_token');
@@ -21,6 +22,9 @@ export default function App() {
 
       if (res.status === 200) {
         setAuth(true);
+
+        const json = await res.json();
+        setUser(json);
       }
     }
   };
@@ -31,7 +35,10 @@ export default function App() {
 
   return (
     <div className="App">
-      <UseAuth.Provider value={{ auth, setAuth }}>
+      <UseAuth.Provider value={{
+        auth, setAuth, user, setUser,
+      }}
+      >
         <BrowserRouter>
           <Routes />
         </BrowserRouter>

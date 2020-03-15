@@ -24,10 +24,12 @@ export default function Login() {
       });
 
       if (res.status === 200) {
-        const data = await res.json();
-
-        Cookies.set('access_token', data.token, { sameSite: 'strict' });
         Auth.setAuth(true);
+
+        const json = await res.json();
+
+        Cookies.set('access_token', json.token, { sameSite: 'strict' });
+        Auth.setUser(json.user);
       } else {
         setErrMsg('Incorrect email or password!');
       }
