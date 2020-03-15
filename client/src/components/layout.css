@@ -25,3 +25,8 @@
 .site-layout .dashboard-info {
   margin: 2em;
 }
+
+/* ant design customization */
+.site-layout .ant-message-notice {
+  margin-left: 200px !important;
+}
