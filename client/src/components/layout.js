@@ -1,6 +1,7 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
-import { VideoCameraOutlined } from '@ant-design/icons';
+import { HomeOutlined, VideoCameraOutlined, SettingOutlined } from '@ant-design/icons';
+import { NavLink } from 'react-router-dom';
 
 import HeaderMenu from './header_menu';
 import './layout.css';
@@ -21,14 +22,22 @@ export default function DashboardLayout({ children }) {
         }}
       >
         <div className="logo" />
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-          <Menu.Item key="1">
+        <Menu theme="dark" mode="inline">
+          <Menu.Item key="0">
+            <HomeOutlined />
+            <NavLink to="/">
+              Dashboard
+            </NavLink>
+          </Menu.Item>
+          {/* <Menu.Item key="1">
             <VideoCameraOutlined />
             <span className="nav-text">Tasks</span>
-          </Menu.Item>
+          </Menu.Item> */}
           <Menu.Item key="2">
-            <VideoCameraOutlined />
-            <span className="nav-text">User Settings</span>
+            <SettingOutlined />
+            <NavLink to="/settings">
+              Settings
+            </NavLink>
           </Menu.Item>
         </Menu>
       </Sider>
