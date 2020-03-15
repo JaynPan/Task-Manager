@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Form, Input, Button } from 'antd';
+import {
+  Form, Input, Button, message,
+} from 'antd';
 import {
   UserOutlined, LockOutlined, MailOutlined, HeartOutlined,
 } from '@ant-design/icons';
@@ -50,6 +52,7 @@ export default function Register(props) {
       });
 
       if (res.status === 201) {
+        message.success('Register successfully! Please login.', 5);
         return props.history.push('/login');
       }
       const json = await res.json();
