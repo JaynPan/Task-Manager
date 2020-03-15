@@ -1,49 +1,41 @@
 import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
+import { BrowserRouter } from 'react-router-dom';
 
-import LoginForm from './login_form';
-import { getCookie } from './utils/cookies';
-import './App.css';
+import Routes from './routes/routes';
+import UseAuth from './utils/use_auth';
 
-function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [profile, setProfile] = useState({});
+export default function App() {
+  const [auth, setAuth] = useState(false);
+  const readCookie = async () => {
+    const token = Cookies.get('token');
+
+    if (token) {
+      // fetch "/users/me" to check token is valid or not
+      const res = await fetch('/users/me', {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.status === 200) {
+        setAuth(true);
+      }
+    }
+  };
 
   useEffect(() => {
-    fetch('/users/me', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${getCookie('access_token') || ''}`,
-      },
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          return res.json();
-        }
-        throw new Error(`${res.status}, ${res.statusText}`);
-      })
-      .then((data) => {
-        setIsAuthenticated(true);
-        setProfile(data);
-      })
-      .catch((e) => console.error(e));
+    readCookie();
   }, []);
 
   return (
     <div className="App">
-      {!isAuthenticated ? (
-        <LoginForm />
-      ) : (
-        <div>
-          {Object.keys(profile).length !== 0 && (
-          <p>
-            {`Hi, ${profile.name}!`}
-          </p>
-          )}
-        </div>
-      )}
+      <UseAuth.Provider value={{ auth, setAuth }}>
+        <BrowserRouter>
+          <Routes />
+        </BrowserRouter>
+      </UseAuth.Provider>
     </div>
   );
 }
-
-export default App;
