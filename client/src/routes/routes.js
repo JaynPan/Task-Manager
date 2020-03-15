@@ -3,6 +3,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 
 import Dashboard from '../page/dashboard';
 import Login from '../page/login';
+import Register from '../page/register';
 import UseAuth from '../utils/use_auth';
 
 export default function Routes() {
@@ -17,6 +18,7 @@ export default function Routes() {
         // if user already authenticat, redirect to home page
         render={() => (!Auth.auth ? <Login /> : <Redirect to="/" />)}
       />
+      <Route exact path="/register" component={Register} />
     </Switch>
   );
 }

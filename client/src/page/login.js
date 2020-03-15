@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import Cookies from 'js-cookie';
+import { Link } from 'react-router-dom';
 import {
   Form, Input, Button, Checkbox,
 } from 'antd';
@@ -46,7 +47,7 @@ export default function Login() {
 
   return (
     <FixedForm>
-      <h2 style={{ paddingBottom: '1em' }}>Task Manager</h2>
+      <h2 style={{ paddingBottom: '1em' }}>Task Manager Login</h2>
       {errMsg.length !== 0 && <ErrMsg className="error">{errMsg}</ErrMsg>}
 
       <Form
@@ -83,6 +84,7 @@ export default function Login() {
             Log in
           </Button>
           {' Or '}
+          <Link to="/register">register now!</Link>
         </Form.Item>
       </Form>
     </FixedForm>
