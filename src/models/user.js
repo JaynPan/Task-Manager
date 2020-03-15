@@ -98,6 +98,12 @@ userSchema.methods.generateAuthToken = async function genToken() {
   return token;
 };
 
+userSchema.virtual('tasks', {
+  ref: 'Task', // Should be exactly same as model 'Task'
+  localField: '_id', // The owener ObjectId on the tasks and that is assciated with the id of the user here
+  foreignField: 'owner', // The name of the field where user data should be stored
+});
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
