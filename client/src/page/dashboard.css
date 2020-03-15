@@ -1,0 +1,27 @@
+.ant-layout-sider-children .logo {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px;
+}
+
+.site-layout {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin-left: 200px;
+}
+
+.site-layout .site-layout-background,
+.site-layout .ant-layout-content {
+  background: #fff;
+  padding: 24;
+  text-align: center;
+}
+
+.site-layout .ant-layout-content {
+  margin: 24px 16px 0;
+}
+
+.site-layout .dashboard-info {
+  margin: 2em;
+}
