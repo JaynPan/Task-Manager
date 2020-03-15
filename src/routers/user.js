@@ -12,7 +12,11 @@ router.post('/users', async (req, res) => {
     const token = await user.generateAuthToken();
     res.status(201).send({ user, token });
   } catch (err) {
-    res.status(400).send(err);
+    if (err.message.includes('E11000 duplicate key')) {
+      err.message = 'Email has already been taken!';
+    }
+
+    res.status(400).send({ error: err.message });
   }
 });
 
@@ -91,7 +95,7 @@ router.patch('/users/:id', async (req, res) => {
     await user.save();
     return res.send(user);
   } catch (err) {
-    return res.status(500).send(err);
+    return res.status(500).send({ error: err.message });
   }
 });
 
