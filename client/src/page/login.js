@@ -5,9 +5,9 @@ import {
 } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
+import FixedForm from '../styled-components/fixed_form';
+import ErrMsg from '../styled-components/err_msg';
 import UseAuth from '../utils/use_auth';
-import './login.css';
-
 
 export default function Login() {
   const Auth = useContext(UseAuth);
@@ -45,9 +45,9 @@ export default function Login() {
   };
 
   return (
-    <div className="login-form-container">
-      <h2 className="app-name">Task Manager</h2>
-      {errMsg.length !== 0 && <p className="error">{errMsg}</p>}
+    <FixedForm>
+      <h2 style={{ paddingBottom: '1em' }}>Task Manager</h2>
+      {errMsg.length !== 0 && <ErrMsg className="error">{errMsg}</ErrMsg>}
 
       <Form
         name="normal_login"
@@ -83,9 +83,8 @@ export default function Login() {
             Log in
           </Button>
           {' Or '}
-          {/* <a href="">register now!</a> */}
         </Form.Item>
       </Form>
-    </div>
+    </FixedForm>
   );
 }
