@@ -59,22 +59,11 @@ router.get('/users/me', auth, async (req, res) => {
   res.send(req.user);
 });
 
-router.get('/users/:id', async (req, res) => {
-  const _id = req.params.id;
-
-  try {
-    const user = await User.findById(_id);
-
-    if (!user) {
-      return res.status(404).send();
-    }
-    return res.send(user);
-  } catch (err) {
-    return res.status(500).send();
-  }
-});
-
-router.patch('/users/:id', async (req, res) => {
+// 1. through the auth middleware and check if is authenticated
+// 2. return back with req.user
+// 3. save to database if all of the updates have valid key
+// 4. send the req back with updated info
+router.patch('/users/me', auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowUpdates = ['name', 'email', 'password', 'age'];
   const isValidateOperation = updates.every((update) => allowUpdates.includes(update));
@@ -84,30 +73,19 @@ router.patch('/users/:id', async (req, res) => {
   }
 
   try {
-    const user = await User.findById(req.params.id);
-
-    if (!user) {
-      return res.sendStatus(404);
-    }
-
     // Iterate req.body to update user, which will send to hashed password middleware
-    updates.forEach((update) => { user[update] = req.body[update]; });
-    await user.save();
-    return res.send(user);
+    updates.forEach((update) => { req.user[update] = req.body[update]; });
+    await req.user.save();
+    return res.send(req.user);
   } catch (err) {
     return res.status(500).send({ error: err.message });
   }
 });
 
-router.delete('/users/:id', async (req, res) => {
+router.delete('/users/me', auth, async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-
-    if (!user) {
-      return res.status(401).send();
-    }
-
-    return res.send(user);
+    await req.user.remove();
+    return res.send(req.user);
   } catch (err) {
     return res.sendStatus(500);
   }
