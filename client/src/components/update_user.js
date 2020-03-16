@@ -19,7 +19,7 @@ export default function UpdateUser() {
     const payload = JSON.parse(JSON.stringify(values));
 
     allowUpdates.forEach((update) => {
-      if (typeof payload[update] !== 'undefined' && payload[update].trim().length !== 0) {
+      if (typeof payload[update] !== 'undefined' && String(payload[update]).trim().length !== 0) {
         return;
       }
       delete payload[update];
