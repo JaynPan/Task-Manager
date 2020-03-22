@@ -29,10 +29,10 @@ export default function DashboardLayout({ children }) {
               Dashboard
             </NavLink>
           </Menu.Item>
-          {/* <Menu.Item key="1">
+          <Menu.Item key="1">
             <VideoCameraOutlined />
-            <span className="nav-text">Tasks</span>
-          </Menu.Item> */}
+            <NavLink to="/tasks">Tasks</NavLink>
+          </Menu.Item>
           <Menu.Item key="2">
             <SettingOutlined />
             <NavLink to="/settings">
