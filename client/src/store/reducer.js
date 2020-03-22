@@ -38,9 +38,9 @@ export default (prevState = defaultState, action) => {
 
   if (action.type === COMPLETE_TASK_ITEM) {
     const newState = JSON.parse(JSON.stringify(prevState));
-    const taskIndex = newState.list.findIndex(({ _id }) => _id === action.id);
+    const taskIndex = newState.list.findIndex(({ _id }) => _id === action.task._id);
 
-    newState.list[taskIndex].isCompleted = action.isCompleted;
+    newState.list[taskIndex].isCompleted = action.task.isCompleted;
     return newState;
   }
 

@@ -54,10 +54,9 @@ export const deleteItem = (id) => (dispatch) => {
   });
 };
 
-export const getToggleCompleteItem = (id, isCompleted) => ({
+export const getToggleCompleteItem = (task) => ({
   type: COMPLETE_TASK_ITEM,
-  id,
-  isCompleted,
+  task,
 });
 
 export const toggleCompleteItem = (id, body) => (dispatch) => {
@@ -70,10 +69,14 @@ export const toggleCompleteItem = (id, body) => (dispatch) => {
     body: JSON.stringify(body),
   }).then((res) => {
     if (res.status === 200) {
-      const action = getToggleCompleteItem(id, body.isCompleted);
-      dispatch(action);
+      return res.json();
     }
-  });
+
+    throw new Error('Something went wrong!');
+  }).then((data) => {
+    const action = getToggleCompleteItem(data);
+    dispatch(action);
+  }).catch((e) => console.log(e));
 };
 
 const initListAction = (data) => ({
