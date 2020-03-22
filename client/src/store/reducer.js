@@ -1,8 +1,8 @@
 import {
-  ADD_TODO_ITEM,
-  DELETE_TODO_ITEM,
+  ADD_TASK_ITEM,
+  DELETE_TASK_ITEM,
   INIT_LIST_ACTION,
-  COMPLETE_TODO_ITEM,
+  COMPLETE_TASK_ITEM,
 } from './actionTypes';
 
 const defaultState = {
@@ -21,14 +21,14 @@ export default (prevState = defaultState, action) => {
     return newState;
   }
 
-  if (action.type === ADD_TODO_ITEM) {
+  if (action.type === ADD_TASK_ITEM) {
     const newState = JSON.parse(JSON.stringify(prevState));
 
     newState.list.push(action.task);
     return newState;
   }
 
-  if (action.type === DELETE_TODO_ITEM) {
+  if (action.type === DELETE_TASK_ITEM) {
     const newState = JSON.parse(JSON.stringify(prevState));
     const taskIndex = newState.list.findIndex(({ _id }) => _id === action.id);
 
@@ -36,7 +36,7 @@ export default (prevState = defaultState, action) => {
     return newState;
   }
 
-  if (action.type === COMPLETE_TODO_ITEM) {
+  if (action.type === COMPLETE_TASK_ITEM) {
     const newState = JSON.parse(JSON.stringify(prevState));
     const taskIndex = newState.list.findIndex(({ _id }) => _id === action.id);
 

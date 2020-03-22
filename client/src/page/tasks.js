@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { Checkbox, Button, Input } from 'antd';
 
 import {
   deleteItem,
-  getTodoList,
+  getTaskList,
   toggleCompleteItem,
   addItemAction,
 } from '../store/actionCreator';
@@ -13,8 +14,7 @@ import './tasks.css';
 function TaskForm({ addTask }) {
   const [value, setValue] = useState(['']);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     if (!value) return;
 
     addTask(value);
@@ -22,36 +22,35 @@ function TaskForm({ addTask }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="task-form">
-      <input
-        type="text"
-        className="input"
-        placeholder="Add new task"
+    <div className="task-form">
+      <Input
+        placeholder="Add New Task"
+        style={{ marginRight: '1em' }}
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        onPressEnter={handleSubmit}
       />
-      <input type="submit" value="submit" />
-    </form>
+      <Button onClick={handleSubmit} type="primary">Save</Button>
+    </div>
   );
 }
 
 
 function Task({
-  todo, completeTodo, deleteTodo,
+  task, completeTask, deleteTask,
 }) {
   return (
     <div
-      style={{ textDecoration: todo.isCompleted ? 'line-through' : '' }}
-      className="todo"
+      style={{ textDecoration: task.isCompleted ? 'line-through' : '' }}
+      className="task"
     >
-      <button type="button" onClick={() => deleteTodo(todo._id)}>Delete</button>
-      {todo.description}
+      <Button type="primary" danger onClick={() => deleteTask(task._id)}>Delete</Button>
+      <p className="task-desc">{task.description}</p>
       <div>
-        <input
-          name={todo._id}
-          type="checkbox"
-          checked={todo.isCompleted}
-          onChange={() => completeTodo(!todo.isCompleted, todo._id)}
+        <Checkbox
+          name={task._id}
+          checked={task.isCompleted}
+          onChange={() => completeTask(!task.isCompleted, task._id)}
         />
       </div>
     </div>
@@ -69,16 +68,16 @@ export default function Tasks() {
   store.subscribe(handleStoreChange);
 
   useEffect(() => {
-    const action = getTodoList();
+    const action = getTaskList();
     store.dispatch(action);
   }, []);
 
-  const completeTodo = (isCompleted, id) => {
+  const completeTask = (isCompleted, id) => {
     const action = toggleCompleteItem(id, { isCompleted });
     store.dispatch(action);
   };
 
-  const deleteTodo = (id) => {
+  const deleteTask = (id) => {
     const action = deleteItem(id);
     store.dispatch(action);
   };
@@ -90,14 +89,15 @@ export default function Tasks() {
 
   return (
     <Layout>
-      <div className="todo-list">
+      <h3>Task Checklist</h3>
+      <div className="task-list">
         <TaskForm addTask={addTask} />
-        {state.list.map((todo) => (
+        {state.list.map((task) => (
           <Task
-            key={todo._id}
-            todo={todo}
-            completeTodo={completeTodo}
-            deleteTodo={deleteTodo}
+            key={task._id}
+            task={task}
+            completeTask={completeTask}
+            deleteTask={deleteTask}
           />
         ))}
       </div>

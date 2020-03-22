@@ -1,14 +1,14 @@
 import Cookies from 'js-cookie';
 
 import {
-  ADD_TODO_ITEM,
-  DELETE_TODO_ITEM,
+  ADD_TASK_ITEM,
+  DELETE_TASK_ITEM,
   INIT_LIST_ACTION,
-  COMPLETE_TODO_ITEM,
+  COMPLETE_TASK_ITEM,
 } from './actionTypes';
 
 export const getAddItemAction = (task) => ({
-  type: ADD_TODO_ITEM,
+  type: ADD_TASK_ITEM,
   task,
 });
 
@@ -35,7 +35,7 @@ export const addItemAction = (description) => (dispatch) => {
 };
 
 export const getDeleteItemAction = (id) => ({
-  type: DELETE_TODO_ITEM,
+  type: DELETE_TASK_ITEM,
   id,
 });
 
@@ -55,7 +55,7 @@ export const deleteItem = (id) => (dispatch) => {
 };
 
 export const getToggleCompleteItem = (id, isCompleted) => ({
-  type: COMPLETE_TODO_ITEM,
+  type: COMPLETE_TASK_ITEM,
   id,
   isCompleted,
 });
@@ -81,7 +81,7 @@ const initListAction = (data) => ({
   data,
 });
 
-export const getTodoList = () => (dispatch) => {
+export const getTaskList = () => (dispatch) => {
   fetch('/tasks', {
     headers: {
       'Content-Type': 'application/json',
