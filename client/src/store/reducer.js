@@ -1,7 +1,6 @@
 import {
   ADD_TODO_ITEM,
   DELETE_TODO_ITEM,
-  CHANGE_INPUT_VALUE,
   INIT_LIST_ACTION,
   COMPLETE_TODO_ITEM,
 } from './actionTypes';
@@ -15,13 +14,6 @@ const defaultState = {
 // reducer中不可以使用異步請求, 不能含有副作用
 // reducer 必須為純函數,給定輸入,輸出必為固定值
 export default (prevState = defaultState, action) => {
-  if (action.type === CHANGE_INPUT_VALUE) {
-    const newState = JSON.parse(JSON.stringify(prevState));
-
-    newState.inputValue = action.value;
-    return newState;
-  }
-
   if (action.type === INIT_LIST_ACTION) {
     const newState = JSON.parse(JSON.stringify(prevState));
 
@@ -32,8 +24,7 @@ export default (prevState = defaultState, action) => {
   if (action.type === ADD_TODO_ITEM) {
     const newState = JSON.parse(JSON.stringify(prevState));
 
-    newState.list.push(newState.inputValue);
-    newState.inputValue = '';
+    newState.list.push(action.task);
     return newState;
   }
 

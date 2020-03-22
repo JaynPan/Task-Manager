@@ -4,10 +4,37 @@ import {
   deleteItem,
   getTodoList,
   toggleCompleteItem,
+  addItemAction,
 } from '../store/actionCreator';
 import store from '../store';
 import Layout from '../components/layout';
 import './tasks.css';
+
+function TaskForm({ addTask }) {
+  const [value, setValue] = useState(['']);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!value) return;
+
+    addTask(value);
+    setValue('');
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="task-form">
+      <input
+        type="text"
+        className="input"
+        placeholder="Add new task"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      <input type="submit" value="submit" />
+    </form>
+  );
+}
+
 
 function Task({
   todo, completeTodo, deleteTodo,
@@ -56,9 +83,15 @@ export default function Tasks() {
     store.dispatch(action);
   };
 
+  const addTask = (task) => {
+    const action = addItemAction(task);
+    store.dispatch(action);
+  };
+
   return (
     <Layout>
       <div className="todo-list">
+        <TaskForm addTask={addTask} />
         {state.list.map((todo) => (
           <Task
             key={todo._id}
