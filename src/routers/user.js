@@ -93,7 +93,6 @@ router.delete('/users/me', auth, async (req, res) => {
 });
 
 const upload = multer({
-  dest: 'avatar',
   limits: {
     fileSize: 1000000,
   },
@@ -106,11 +105,19 @@ const upload = multer({
   },
 });
 
-router.post('/users/me/avatar', upload.single('avatar'), (req, res) => {
+router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
+  req.user.avatar = req.file.buffer;
+  await req.user.save();
   res.status(200).send();
 // eslint-disable-next-line no-unused-vars
 }, (error, req, res, next) => { // should list all four arguments, so express know this is design to handle errors
   res.status(400).send({ error: error.message });
+});
+
+router.delete('/users/me/avatar', auth, async (req, res) => {
+  req.user.avatar = undefined;
+  await req.user.save();
+  res.send();
 });
 
 module.exports = router;
