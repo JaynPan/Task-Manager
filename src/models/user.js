@@ -99,6 +99,7 @@ userSchema.methods.toJSON = function toJson() {
   // delete sensitve data, password and tokens
   delete userObject.password;
   delete userObject.tokens;
+  delete userObject.avatar;
 
   return userObject;
 };
