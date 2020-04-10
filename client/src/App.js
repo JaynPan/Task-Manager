@@ -8,11 +8,11 @@ import UseAuth from './utils/use_auth';
 export default function App() {
   const [user, setUser] = useState({});
   const [auth, setAuth] = useState(false);
+  const [avatar, setAvatar] = useState('');
   const fetchUser = async () => {
     const token = Cookies.get('access_token');
 
     if (token) {
-      // fetch "/users/me" to check token is valid or not
       const res = await fetch('/users/me', {
         headers: {
           'Content-Type': 'application/json',
@@ -25,6 +25,21 @@ export default function App() {
 
         const json = await res.json();
         setUser(json);
+
+        // loading avatar
+        const resAvatar = await fetch(`users/${json._id}/avatar`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (resAvatar.status === 200) {
+          const blob = await resAvatar.blob();
+          const objURL = URL.createObjectURL(blob);
+
+          setAvatar(objURL);
+        }
       }
     }
   };
@@ -36,7 +51,7 @@ export default function App() {
   return (
     <div className="App">
       <UseAuth.Provider value={{
-        auth, setAuth, user, setUser,
+        auth, setAuth, user, setUser, avatar, setAvatar,
       }}
       >
         <BrowserRouter>

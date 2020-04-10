@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Menu } from 'antd';
+import { Menu, Avatar } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
 import Cookies from 'js-cookie';
 
@@ -10,7 +10,7 @@ export default function HeaderMenu() {
   const [current, setCurrent] = useState('');
   const Auth = useContext(UseAuth);
 
-  const handleClick = async (e) => {
+  const handleLogout = async (e) => {
     setCurrent(e.key);
 
     if (e.key === 'logout') {
@@ -30,10 +30,18 @@ export default function HeaderMenu() {
   };
 
   return (
-    <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal" className="header-menu">
+    <Menu onClick={handleLogout} selectedKeys={[current]} mode="horizontal" className="header-menu">
       <Menu.Item key="logout">
         <LogoutOutlined />
         Logout
+      </Menu.Item>
+      <Menu.Item key="avatar">
+        <Avatar
+          src={Auth.avatar}
+          style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}
+        >
+          {Auth.user.name && Auth.user.name.slice(0, 1)}
+        </Avatar>
       </Menu.Item>
     </Menu>
   );
