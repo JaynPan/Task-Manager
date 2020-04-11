@@ -14,6 +14,23 @@ export default function Login() {
   const Auth = useContext(UseAuth);
   const [errMsg, setErrMsg] = useState('');
 
+  const fetchAvatar = (id) => {
+    console.log('hi');
+    fetch(`/users/${id}/avatar`)
+      .then((response) => {
+        if (response.status === 200) {
+          return response.blob();
+        }
+
+        throw new Error(response.statusText);
+      })
+      .then((images) => {
+        // Then create a local URL for that image and print it
+        const outside = URL.createObjectURL(images);
+        Auth.setAvatar(outside);
+      }).catch((e) => console.log(e));
+  };
+
   const onFinish = async (values) => {
     try {
       const res = await fetch('/users/login', {
@@ -31,6 +48,7 @@ export default function Login() {
 
         Cookies.set('access_token', json.token, { sameSite: 'strict' });
         Auth.setUser(json.user);
+        fetchAvatar(json.user._id);
       } else {
         setErrMsg('Incorrect email or password!');
       }
