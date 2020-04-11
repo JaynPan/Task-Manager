@@ -9,6 +9,7 @@ export default function App() {
   const [user, setUser] = useState({});
   const [auth, setAuth] = useState(false);
   const [avatar, setAvatar] = useState('');
+
   const fetchUser = async () => {
     const token = Cookies.get('access_token');
 
@@ -26,7 +27,7 @@ export default function App() {
         const json = await res.json();
         setUser(json);
 
-        // loading avatar
+        // fetching avatar
         const resAvatar = await fetch(`users/${json._id}/avatar`, {
           headers: {
             'Content-Type': 'application/json',

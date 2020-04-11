@@ -9,8 +9,24 @@ import styled from 'styled-components';
 import UseAuth from '../utils/use_auth';
 
 export default function UpdateAvatar() {
-  const [refresh, setRefresh] = React.useState(false);
   const Auth = useContext(UseAuth);
+
+  const fetchAvatar = () => {
+    fetch(`/users/${Auth.user._id}/avatar`)
+      .then((response) => {
+        if (response.status === 200) {
+          return response.blob();
+        }
+
+        throw new Error(response.statusText);
+      })
+      .then((images) => {
+        // Then create a local URL for that image and print it
+        const outside = URL.createObjectURL(images);
+        Auth.setAvatar(outside);
+      }).catch((e) => console.log(e));
+  };
+
   const props = {
     name: 'avatar',
     action: '/users/me/avatar',
@@ -24,29 +40,12 @@ export default function UpdateAvatar() {
       }
       if (info.file.status === 'done') {
         message.success(`${info.file.name} file uploaded successfully`);
-        setRefresh(true);
+        fetchAvatar();
       } else if (info.file.status === 'error') {
         message.error(`${info.file.name} file upload failed.`);
       }
     },
   };
-
-  React.useEffect(() => {
-    fetch(`/users/${Auth.user._id}/avatar`)
-      .then((response) => {
-        if (response.status === 200) {
-          return response.blob();
-        }
-
-        throw new Error(response.statusText);
-      })
-      .then((images) => {
-      // Then create a local URL for that image and print it
-        const outside = URL.createObjectURL(images);
-        Auth.setAvatar(outside);
-        setRefresh(false);
-      }).catch((e) => console.log(e));
-  }, [refresh]);
 
   return (
     <AvatarContainer>
