@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { BrowserRouter } from 'react-router-dom';
+import { LoadingOutlined } from '@ant-design/icons';
 
+import styled from 'styled-components';
 import Routes from './routes/routes';
 import UseAuth from './utils/use_auth';
 
@@ -9,9 +11,11 @@ export default function App() {
   const [user, setUser] = useState({});
   const [auth, setAuth] = useState(false);
   const [avatar, setAvatar] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const fetchUser = async () => {
     const token = Cookies.get('access_token');
+    setLoading(true);
 
     if (token) {
       const res = await fetch('/users/me', {
@@ -43,11 +47,28 @@ export default function App() {
         }
       }
     }
+
+    setLoading(false);
   };
 
   useEffect(() => {
     fetchUser();
   }, []);
+
+  if (loading) {
+    return (
+      <LoadingOutlined
+        style={{
+          color: '#fff',
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          fontSize: '4em',
+        }}
+      />
+    );
+  }
 
   return (
     <div className="App">
