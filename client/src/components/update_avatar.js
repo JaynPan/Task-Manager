@@ -33,13 +33,19 @@ export default function UpdateAvatar() {
 
   React.useEffect(() => {
     fetch(`/users/${Auth.user._id}/avatar`)
-      .then((response) => response.blob())
+      .then((response) => {
+        if (response.status === 200) {
+          return response.blob();
+        }
+
+        throw new Error(response.statusText);
+      })
       .then((images) => {
       // Then create a local URL for that image and print it
         const outside = URL.createObjectURL(images);
         Auth.setAvatar(outside);
         setRefresh(false);
-      });
+      }).catch((e) => console.log(e));
   }, [refresh]);
 
   return (
@@ -60,8 +66,6 @@ export default function UpdateAvatar() {
         </Upload>
         The maximum file size is 1MB
       </div>
-
-
     </AvatarContainer>
   );
 }
