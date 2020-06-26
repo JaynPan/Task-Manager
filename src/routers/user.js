@@ -1,6 +1,9 @@
 const express = require('express');
 const multer = require('multer');
 const sharp = require('sharp');
+const jwt = require('jsonwebtoken');
+const sgMail = require('@sendgrid/mail');
+
 const User = require('../models/user');
 const auth = require('../middleware/auth');
 
@@ -9,17 +12,72 @@ const router = new express.Router();
 router.post('/users', async (req, res) => {
   const user = new User(req.body);
 
-  try {
-    await user.save();
-    const token = await user.generateAuthToken();
-    res.status(201).send({ user, token });
-  } catch (err) {
-    if (err.message.includes('E11000 duplicate key')) {
-      err.message = 'Email has already been taken!';
+  user.validate((err) => {
+    if (err) {
+      return res.status(400).send({ error: err.message });
     }
+    return true;
+  });
 
-    res.status(400).send({ error: err.message });
+  const { name, email, password } = user;
+  const isEmailTaken = await User.countDocuments({ email });
+
+  if (isEmailTaken) {
+    return res.status(400).send({ error: 'Email has already been taken.' });
   }
+
+  const token = jwt.sign(
+    { name, email, password },
+    process.env.JWT_SECRET,
+    { expiresIn: '20m' },
+  );
+
+  const emailData = {
+    to: email,
+    from: 'jpan0831@gmail.com',
+    subject: 'Welcome to Task Manager! Confirm Your Email',
+    html: `
+          <h1>You're on your way! Let's confirm your email address.</h1>
+          <p>Please click the given link below to activate account!</p>
+          <p>
+            <a href="http://${process.env.API_ENDPOINT}/users/activate/${token}" target="_blank">
+              Confirm Email Address
+            </a>
+          </p>
+    `,
+  };
+
+  try {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    await sgMail.send(emailData);
+    return res.send({ message: 'Email has been sent, kindly activate your account.' });
+  } catch (e) {
+    return res.status(400).send({ error: e.message });
+  }
+});
+
+router.get('/users/activate/:id', async (req, res) => {
+  const token = req.params.id;
+
+  if (token) {
+    try {
+      const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+      const { name, email, password } = decodedToken;
+      const newUser = new User({ name, email, password });
+
+      try {
+        await newUser.save();
+        const accessToken = await newUser.generateAuthToken();
+        return res.status(201).send({ user: newUser, token: accessToken });
+      } catch (e) {
+        return res.status(400).send({ error: 'Email has already been verified successfully!' });
+      }
+    } catch (e) {
+      return res.status(400).send({ error: 'Incorrect or expired link.' });
+    }
+  }
+
+  return res.status(400).send('something went wrong.');
 });
 
 // Delete the auth token in user data
