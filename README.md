@@ -20,6 +20,7 @@ https://jay-pan-task-manager.herokuapp.com/
 - Use Aysnc/ Await ES6 syntax handling asynchronous request
 - User registration, login, logout etc.
 - API authentication and security using JSON web token
+- Send account activating Email by using Sendgrid
 - Establish mongoose relationship between two mongoose schema
 - Avatar file upload using multar with file validation, auto cropping
 
@@ -36,7 +37,6 @@ https://jay-pan-task-manager.herokuapp.com/
 **backend**
 
 - API Sorting, filtering, pagination for tasks
-- Sending account activating Email by using Sendgrid
 - Test code using JEST framework
 
 **frontend**
@@ -52,9 +52,13 @@ https://jay-pan-task-manager.herokuapp.com/
 Create .dev.env file at /config directory and provide accordingly variable
 
 ```
-PORT=
+API_ENDPOINT=localhost:3001
+PORT=3001
+SENDGRID_API_KEY=
 JWT_SECRET=
+MONGODB_URL_DEV=mongodb://127.0.0.1:27017/task-manager-api
 MONGODB_URL=
+CLIENT_URL_DEV=http://localhost:3000
 ```
 
 ```
