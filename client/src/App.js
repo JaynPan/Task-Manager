@@ -3,7 +3,6 @@ import Cookies from 'js-cookie';
 import { BrowserRouter } from 'react-router-dom';
 import { LoadingOutlined } from '@ant-design/icons';
 
-import styled from 'styled-components';
 import Routes from './routes/routes';
 import UseAuth from './utils/use_auth';
 

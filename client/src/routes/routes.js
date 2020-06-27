@@ -2,10 +2,11 @@ import React, { useContext } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 import Dashboard from '../page/dashboard';
-import Tasks from "../page/tasks";
+import Tasks from '../page/tasks';
 import Settings from '../page/settings';
 import Login from '../page/login';
 import Register from '../page/register';
+import AcitivateEmail from '../page/activateEmail';
 import UseAuth from '../utils/use_auth';
 
 export default function Routes() {
@@ -23,6 +24,7 @@ export default function Routes() {
         render={() => (!Auth.auth ? <Login /> : <Redirect to="/" />)}
       />
       <Route exact path="/register" component={Register} />
+      <Route exact path="/activate" component={AcitivateEmail} />
     </Switch>
   );
 }

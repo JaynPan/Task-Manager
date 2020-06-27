@@ -51,13 +51,16 @@ export default function Register(props) {
         },
       });
 
-      if (res.status === 201) {
-        message.success('Register successfully! Please login.', 5);
-        return props.history.push('/login');
+      if (res.status === 200) {
+        message.success('Email has been sent, kindly activate your account', 5);
+        return props.history.push('/activate');
       }
-      const json = await res.json();
 
-      return setErrMsg(json.error);
+      if (res.status === 400) {
+        const data = await res.json();
+        return setErrMsg(data.error);
+      }
+      return setErrMsg('somthing went wrong! try again later.');
     } catch (e) {
       return setErrMsg(`Something went wrong! ${e}`);
     }

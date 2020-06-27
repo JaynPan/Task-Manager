@@ -67,8 +67,7 @@ router.get('/users/activate/:id', async (req, res) => {
 
       try {
         await newUser.save();
-        const accessToken = await newUser.generateAuthToken();
-        return res.status(201).send({ user: newUser, token: accessToken });
+        return res.redirect(301, `${process.env.CLIENT_URL_DEV}/login`);
       } catch (e) {
         return res.status(400).send({ error: 'Email has already been verified successfully!' });
       }
@@ -86,7 +85,7 @@ router.post('/users/logout', auth, async (req, res) => {
     // filter out the token the user used
     req.user.tokens = req.user.tokens.filter((tokenObj) => tokenObj.token !== req.token);
     await req.user.save();
-    res.send(200);
+    res.sendStatus(200);
   } catch (e) {
     res.status(500).send();
   }
